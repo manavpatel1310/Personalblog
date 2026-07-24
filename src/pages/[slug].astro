@@ -1,0 +1,37 @@
+---
+import { toHTML } from "@portabletext/to-html";
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { hasSanityConfig, sanityClient } from "../lib/sanity";
+
+export async function getStaticPaths() {
+	if (!hasSanityConfig) return [];
+
+	const pages: { slug: string }[] = await sanityClient!.fetch(
+		`*[_type == "page" && defined(slug.current)]{ "slug": slug.current }`
+	);
+
+	return pages.map((page) => ({ params: { slug: page.slug } }));
+}
+
+const { slug } = Astro.params;
+
+const page = await sanityClient!.fetch(
+	`*[_type == "page" && slug.current == $slug][0]{ title, heading, body }`,
+	{ slug }
+);
+
+if (!page) return Astro.redirect("/");
+---
+
+<Layout title={`${page.title} — Portfolio`}>
+	<Header />
+
+	<article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+		<h1 class="text-3xl font-bold text-gray-900 dark:text-white">{page.heading || page.title}</h1>
+		{page.body && <div class="prose prose-neutral mt-8 max-w-none dark:prose-invert" set:html={toHTML(page.body)} />}
+	</article>
+
+	<Footer />
+</Layout>

@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Preline toggles Tailwind utility classes (e.g. "hidden") at runtime,
+   so its JS must be included in Tailwind's class-scanning sources. */
+@source "../../node_modules/preline/dist/*.js";

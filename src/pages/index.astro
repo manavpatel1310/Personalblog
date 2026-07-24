@@ -1,0 +1,74 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import NewsletterForm from "../components/NewsletterForm.tsx";
+import { hasSanityConfig, sanityClient } from "../lib/sanity";
+
+type Post = { _id: string; title: string; slug: string; excerpt?: string };
+
+const fallbackPosts: Post[] = [
+	{ _id: "1", title: "Connect Sanity to see real posts here", slug: "#", excerpt: "Set PUBLIC_SANITY_PROJECT_ID in .env once your Studio is deployed." },
+];
+
+const posts: Post[] = hasSanityConfig
+	? await sanityClient!.fetch(
+			`*[_type == "post"] | order(publishedAt desc)[0...3]{ _id, title, "slug": slug.current, excerpt }`
+		)
+	: fallbackPosts;
+---
+
+<Layout title="Portfolio — Astro + React + Sanity">
+	<Header />
+
+	<main>
+		<section class="mx-auto max-w-5xl px-4 py-20 text-center sm:px-6 lg:px-8">
+			<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
+				High-performance sites, built with modern tools
+			</h1>
+			<p class="mx-auto mt-4 max-w-2xl text-lg text-gray-600 dark:text-neutral-400">
+				Astro for speed, React for interactivity, Sanity for content, Tailwind + Preline for UI,
+				and Playwright to keep it all honest.
+			</p>
+			<div class="mt-8 flex justify-center">
+				<NewsletterForm client:load />
+			</div>
+		</section>
+
+		<section class="border-t border-gray-200 py-16 dark:border-neutral-700">
+			<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+				<h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Latest posts</h2>
+				<p class="mt-1 text-sm text-gray-500 dark:text-neutral-400">
+					{hasSanityConfig ? "Pulled live from Sanity." : "Showing fallback content — Sanity isn't configured yet."}
+				</p>
+
+				<div class="mt-8 grid gap-6 sm:grid-cols-3">
+					{
+						posts.map((post) => (
+							<a
+								href={`/blog/${post.slug}`}
+								class="block rounded-xl border border-gray-200 p-5 transition hover:border-gray-300 hover:shadow-sm dark:border-neutral-700 dark:hover:border-neutral-600"
+							>
+								<h3 class="font-semibold text-gray-900 dark:text-white">{post.title}</h3>
+								{post.excerpt && (
+									<p class="mt-2 text-sm text-gray-500 dark:text-neutral-400">{post.excerpt}</p>
+								)}
+							</a>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section id="contact" class="border-t border-gray-200 py-16 dark:border-neutral-700">
+			<div class="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+				<h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Get in touch</h2>
+				<p class="mt-2 text-sm text-gray-500 dark:text-neutral-400">
+					Reach out and let's build something fast.
+				</p>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

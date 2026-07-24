@@ -1,0 +1,46 @@
+---
+import { toHTML } from "@portabletext/to-html";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { hasSanityConfig, sanityClient } from "../../lib/sanity";
+
+export async function getStaticPaths() {
+	if (!hasSanityConfig) return [];
+
+	const posts: { slug: string }[] = await sanityClient!.fetch(
+		`*[_type == "post" && defined(slug.current)]{ "slug": slug.current }`
+	);
+
+	return posts.map((post) => ({ params: { slug: post.slug } }));
+}
+
+const { slug } = Astro.params;
+
+const post = await sanityClient!.fetch(
+	`*[_type == "post" && slug.current == $slug][0]{ title, excerpt, body, publishedAt }`,
+	{ slug }
+);
+
+if (!post) return Astro.redirect("/blog");
+
+const bodyHtml = post.body ? toHTML(post.body) : "";
+---
+
+<Layout title={`${post.title} — Portfolio`} description={post.excerpt}>
+	<Header />
+
+	<article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+		<h1 class="text-3xl font-bold text-gray-900 dark:text-white">{post.title}</h1>
+		{
+			post.publishedAt && (
+				<p class="mt-2 text-sm text-gray-500 dark:text-neutral-400">
+					{new Date(post.publishedAt).toLocaleDateString()}
+				</p>
+			)
+		}
+		<div class="prose prose-neutral mt-8 max-w-none dark:prose-invert" set:html={bodyHtml} />
+	</article>
+
+	<Footer />
+</Layout>

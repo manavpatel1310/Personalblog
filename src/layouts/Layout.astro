@@ -1,0 +1,29 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = "A high-performance site built with Astro." } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<title>{title}</title>
+	</head>
+	<body class="bg-white text-gray-800 antialiased dark:bg-neutral-900 dark:text-neutral-200">
+		<slot />
+
+		<script>
+			import { HSStaticMethods } from "preline";
+			HSStaticMethods.autoInit();
+		</script>
+	</body>
+</html>

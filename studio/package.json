@@ -1,0 +1,30 @@
+{
+  "name": "studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "login": "sanity login"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.6.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "sanity": "^6.6.0",
+    "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "adm-zip": "^0.6.0",
+    "js-yaml": "^5.2.1",
+    "smol-toml": "^1.7.0",
+    "uuid": "^14.0.1"
+  }
+}
