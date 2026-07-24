@@ -108,7 +108,7 @@ npm run astro check
 - [ ] Deploy the Sanity Studio (`npm run deploy` from `studio/`)
 
 ## Live website
-- https://personalblog-omega-seven.vercel.app/
+https://personalblog-omega-seven.vercel.app/
 
 ## License
 [MIT](LICENSE) © 2026 Manav Patel
