@@ -107,6 +107,8 @@ npm run astro check
 - [ ] Add a Lambda + API Gateway backend if a dynamic API is needed (e.g. contact form)
 - [ ] Deploy the Sanity Studio (`npm run deploy` from `studio/`)
 
-## License
+## Live website
+- https://personalblog-omega-seven.vercel.app/
 
+## License
 [MIT](LICENSE) © 2026 Manav Patel
